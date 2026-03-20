@@ -1,0 +1,100 @@
+# ----------------------------
+# Namespaces
+# ----------------------------
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: attacker
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+
+# ----------------------------
+# Ubuntu Pod (Frontend)
+# ----------------------------
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-pod
+  namespace: frontend
+  labels:
+    app: ubuntu
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command: ["sleep", "3600"]
+
+# ----------------------------
+# Alpine Pod (Backend)
+# ----------------------------
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-pod
+  namespace: backend
+  labels:
+    app: alpine
+spec:
+  containers:
+  - name: alpine
+    image: alpine
+    command: ["sleep", "3600"]
+
+# ----------------------------
+# Kali Pod (Attacker)
+# ----------------------------
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kali-pod
+  namespace: attacker
+  labels:
+    app: kali
+spec:
+  containers:
+  - name: kali
+    image: kalilinux/kali-rolling
+    command: ["sleep", "3600"]
+
+# ----------------------------
+# Ubuntu Service
+# ----------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ubuntu-service
+  namespace: frontend
+spec:
+  selector:
+    app: ubuntu
+  ports:
+    - port: 80
+      targetPort: 80
+
+# ----------------------------
+# Alpine Service
+# ----------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alpine-service
+  namespace: backend
+spec:
+  selector:
+    app: alpine
+  ports:
+    - port: 80
+      targetPort: 80

@@ -1,0 +1,74 @@
+# ----------------------------
+# Ubuntu Deployment (Frontend)
+# ----------------------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-deploy
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: python:3.11-slim
+        command: ["python3", "-m", "http.server", "80"]
+        ports:
+        - containerPort: 80
+
+# ----------------------------
+# Alpine Deployment (Backend)
+# ----------------------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpine-deploy
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpine
+  template:
+    metadata:
+      labels:
+        app: alpine
+    spec:
+      containers:
+      - name: alpine
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+
+# ----------------------------
+# Kali Deployment (Attacker)
+# ----------------------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kali-deploy
+  namespace: attacker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kali
+  template:
+    metadata:
+      labels:
+        app: kali
+    spec:
+      containers:
+      - name: kali
+        image: kalilinux/kali-rolling
+        command: ["sleep", "3600"]
